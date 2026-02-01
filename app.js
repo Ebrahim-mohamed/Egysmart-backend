@@ -10,6 +10,8 @@ app.use(
   cors({
     origin: "http://localhost:4001",
     origin: "http://localhost:3000",
+    origin: "https://egysmart.org",
+    origin: "https://api.egysmart.org",
     credentials: true,
   }),
 );
