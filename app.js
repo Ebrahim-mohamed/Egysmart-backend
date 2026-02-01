@@ -17,6 +17,7 @@ app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
 app.use("/api/contacts", require("./routes/contact.routes"));
+app.use("/api/join", require("./routes/join.routes"));
 app.use("/api/news", require("./routes/news.routes"));
 app.use("/api/jobs", require("./routes/job.routes"));
 app.use("/api/projects", require("./routes/project.routes"));
