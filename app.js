@@ -6,15 +6,29 @@ const connectDB = require("./config/db");
 connectDB();
 
 const app = express();
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:4001",
+  "https://egysmart.org",
+  "https://api.egysmart.org",
+];
+
 app.use(
   cors({
-    origin: "http://localhost:4001",
-    origin: "http://localhost:3000",
-    origin: "https://egysmart.org",
-    origin: "https://api.egysmart.org",
-    credentials: true,
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
+
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
