@@ -40,5 +40,6 @@ app.use("/api/projects", require("./routes/project.routes"));
 app.use("/api/testimonials", require("./routes/testimonial.routes"));
 app.use("/api/logos", require("./routes/logo.routes"));
 app.use("/api/auth", require("./routes/auth.routes"));
+app.use("/api/company-profile", require("./routes/companyProfile.routes"));
 
 app.listen(4002, () => console.log("Server running on port 4002"));
