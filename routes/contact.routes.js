@@ -18,14 +18,33 @@ router.post("/", async (req, res) => {
 
 /**
  * @route   GET /api/contacts
- * @desc    Get all contacts (dashboard)
+ * @desc    Get all contacts (unseen first, then seen) — dashboard
  */
 router.get("/", async (req, res) => {
   try {
-    const contacts = await Contact.find().sort({ createdAt: -1 });
+    // Sort: unseen (seen: false) first, then seen (seen: true), both groups by newest first
+    const contacts = await Contact.find().sort({ seen: 1, createdAt: -1 });
     res.json(contacts);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+/**
+ * @route   PATCH /api/contacts/:id/seen
+ * @desc    Mark a contact message as seen
+ */
+router.patch("/:id/seen", async (req, res) => {
+  try {
+    const contact = await Contact.findByIdAndUpdate(
+      req.params.id,
+      { seen: true },
+      { new: true },
+    );
+    if (!contact) return res.status(404).json({ message: "Contact not found" });
+    res.json(contact);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 });
 

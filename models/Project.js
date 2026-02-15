@@ -11,6 +11,11 @@ const projectSchema = new mongoose.Schema(
       enum: ["Turnkey Projects", "Protective Coating", "Concrete Flooring"],
       required: true,
     },
+    category: {
+      type: String,
+      enum: ["Residence", "Commercial", "Industries"],
+      required: true,
+    },
     budget: { type: Number, required: true },
     status: {
       type: String,
@@ -18,8 +23,13 @@ const projectSchema = new mongoose.Schema(
       required: true,
     },
     duration: { type: String, required: true },
+    location: { type: String, required: true },
     bua: { type: Number, required: true },
     scopeOfWork: { type: String, required: true },
+    important: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );

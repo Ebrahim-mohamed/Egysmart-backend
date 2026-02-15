@@ -1,4 +1,4 @@
-// models/Contact.js
+// models/Join.js
 const mongoose = require("mongoose");
 
 const JoinSchema = new mongoose.Schema(
@@ -10,6 +10,14 @@ const JoinSchema = new mongoose.Schema(
     userType: {
       type: String,
       enum: ["intern", "jop"],
+      required: true,
+    },
+    internStatus: {
+      type: String,
+      enum: ["graduate", "undergraduate"],
+      required: function () {
+        return this.userType === "intern"; // ensures backend validation
+      },
     },
   },
   { timestamps: true },

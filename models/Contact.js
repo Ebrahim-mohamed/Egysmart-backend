@@ -11,6 +11,10 @@ const ContactSchema = new mongoose.Schema(
       type: String,
       enum: ["client", "supplier"],
     },
+    seen: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );
