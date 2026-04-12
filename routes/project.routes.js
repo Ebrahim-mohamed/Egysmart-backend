@@ -1,14 +1,15 @@
 const express = require("express");
 const Project = require("../models/Project");
-const upload = require("../middleware/upload"); // multer middleware
+const upload = require("../middleware/upload");
 const router = express.Router();
 
 // Create Project
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", upload.array("images", 20), async (req, res) => {
   try {
+    const filenames = req.files?.map((f) => f.filename) ?? [];
     const project = await Project.create({
       ...req.body,
-      image: req.file?.filename,
+      images: filenames,
     });
     res.json(project);
   } catch (err) {
@@ -46,10 +47,8 @@ router.patch("/:id/important", async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
     if (!project) return res.status(404).json({ error: "Project not found" });
-
     project.important = !project.important;
     await project.save();
-
     res.json(project);
   } catch (err) {
     console.error(err);
@@ -58,15 +57,20 @@ router.patch("/:id/important", async (req, res) => {
 });
 
 // Update Project
-router.put("/:id", upload.single("image"), async (req, res) => {
+router.put("/:id", upload.array("images", 20), async (req, res) => {
   try {
+    const newFilenames = req.files?.map((f) => f.filename) ?? [];
+
+    // If new images were uploaded replace all; otherwise keep existing
+    const updateData = {
+      ...req.body,
+      ...(newFilenames.length > 0 ? { images: newFilenames } : {}),
+    };
+
     const updated = await Project.findByIdAndUpdate(
       req.params.id,
-      {
-        ...req.body,
-        ...(req.file ? { image: req.file.filename } : {}),
-      },
-      { new: true },
+      updateData,
+      { new: true }
     );
     res.json(updated);
   } catch (err) {
